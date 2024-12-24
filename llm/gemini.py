@@ -27,18 +27,18 @@ class GeminiProvider(LLMProvider):
             full_prompt
         )
 
-        return LLMResponse(
-            content=response.text,
-            raw_response=response,
-            usage={"total_tokens": response.usage.total_tokens},
-        )
+        return LLMResponse(content=response.text, raw_response=response, usage=None)
 
     async def stream(
         self, prompt: str, context: Optional[List[str]] = None
     ) -> AsyncIterator[str]:
         """Stream response using Gemini"""
         full_prompt = self._build_prompt(prompt, context)
-        async for chunk in self.model.generate_content_async(full_prompt, stream=True):
+        response_stream = await self.model.generate_content_async(
+            full_prompt, stream=True
+        )
+
+        async for chunk in response_stream:
             if chunk.text:
                 yield chunk.text
 

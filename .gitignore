@@ -11,3 +11,4 @@ dist/
 .running_coach/
 implementation-roadmap.md
 running-coach-prd.md
+.env
